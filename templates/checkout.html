@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Checkout - Glowify</title></head>
+<body style="font-family: sans-serif; padding: 50px;">
+    <h2>Checkout - ஆர்டர் விவரங்கள்</h2>
+    <p>மொத்தத் தொகை: ₹{{ total }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="address" placeholder="உங்கள் முகவரி" required style="width: 100%; padding: 10px; margin-bottom: 10px;"><br>
+        <button type="submit" style="background: green; color: white; padding: 15px; border: none; width: 200px; cursor: pointer;">Place Order</button>
+    </form>
+</body>
+</html>

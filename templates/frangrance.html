@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glowify - Perfumes Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #ffffff; color: #333; }
+
+        /* --- 1. NAVBAR --- */
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 5%; background: #fff; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-left { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .logo { font-size: 22px; font-weight: 700; color: #d63384; font-style: italic; text-decoration: none; }
+        .search-container { position: relative; width: 250px; }
+        .search-container input {
+            width: 100%; padding: 8px 15px 8px 35px; border: none; border-radius: 20px;
+            background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); outline: none; font-size: 13px;
+        }
+        .search-container i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        
+        .nav-center { flex: 2; display: flex; justify-content: center; }
+        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links a { text-decoration: none; color: #333; font-size: 14px; font-weight: 500; }
+        .nav-links a.active { color: #d63384; border-bottom: 2px solid #d63384; }
+
+        .nav-right { flex: 1; display: flex; justify-content: flex-end; gap: 20px; font-size: 18px; color: #444; }
+
+        /* --- 2. LAYOUT --- */
+        .shop-container { display: flex; padding: 40px 5%; gap: 30px; }
+
+        /* Sidebar */
+        .sidebar { width: 240px; flex-shrink: 0; }
+        .filter-card {
+            background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .filter-title { font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .filter-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #fcfcfc; border-radius: 8px; margin-bottom: 12px;
+            font-size: 13px; color: #555; cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content { flex: 1; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .sort-btn { padding: 8px 18px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 13px; cursor: pointer; }
+
+        /* Perfume Grid */
+        .perfume-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .perfume-card {
+            background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #f5f5f5;
+            transition: 0.3s; position: relative;
+        }
+        .perfume-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .perfume-card img { width: 100%; height: 220px; object-fit: contain; margin-bottom: 15px; }
+        
+        .brand { font-size: 11px; font-weight: 700; color: #444; text-transform: uppercase; letter-spacing: 0.5px; }
+        .p-name { font-size: 13px; color: #666; height: 38px; margin: 5px 0; overflow: hidden; }
+        .rating { color: #ffc107; font-size: 11px; margin-bottom: 5px; }
+        .rating span { color: #999; margin-left: 5px; font-weight: 400; }
+        .price { font-weight: 700; font-size: 15px; display: block; margin-bottom: 15px; }
+
+        .actions { display: flex; align-items: center; gap: 10px; }
+        .btn-cart { background: #ff1e82; color: #fff; border: none; padding: 10px; border-radius: 8px; flex: 1; font-weight: 600; font-size: 12px; cursor: pointer; }
+        .btn-wish { color: #ff1e82; border: 1px solid #ff1e82; padding: 8px; border-radius: 50%; font-size: 14px; cursor: pointer; }
+
+        /* --- 3. BEAUTY CIRCLE SECTION --- */
+        .circle-section {
+            background: #ff8ca8; margin: 40px 0; border-radius: 25px;
+            display: flex; align-items: center; padding: 40px 60px; color: white;
+        }
+        .circle-section img { width: 220px; border-radius: 15px; margin-right: 40px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .circle-content h2 { font-size: 26px; margin-bottom: 10px; }
+        .circle-content p { font-size: 12px; opacity: 0.9; margin-bottom: 25px; }
+        .circle-form input { padding: 14px 25px; width: 320px; border-radius: 30px; border: none; outline: none; margin-right: 10px; }
+        .circle-form button { padding: 14px 35px; border-radius: 30px; border: none; background: #fff; color: #ff1e82; font-weight: bold; cursor: pointer; }
+
+        /* --- 4. WAVE FOOTER --- */
+        .footer-wave { background: #ff1e82; color: white; padding: 110px 8% 40px; position: relative; clip-path: ellipse(150% 100% at 50% 100%); margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+        .footer-col li { list-style: none; margin-bottom: 10px; font-size: 13px; opacity: 0.85; }
+        .social-icons i { font-size: 20px; margin-right: 15px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <a href="#" class="logo">Glowify</a>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Fragrance...">
+            </div>
+        </div>
+        <div class="nav-center">
+            <ul class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+           <a href="{% url 'shop' %}">Shop</a>
+        <a href="{% url 'offers' %}">Offers</a>
+          <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </ul>
+        </div>
+        <div class="nav-right">
+            <i class="fas fa-shopping-cart"></i>
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </nav>
+
+    <div class="shop-container">
+        <aside class="sidebar">
+            <div class="filter-card">
+                <h3 class="filter-title"><i class="fas fa-sliders-h"></i> Filter</h3>
+                <div class="filter-item"><span>Brand</span> <i class="fas fa-chevron-down"></i></div>
+                <div class="filter-item"><span>Color</span> <i class="fas fa-chevron-down"></i></div>
+                <div class="filter-item"><span>Discount</span> <i class="fas fa-chevron-down"></i></div>
+                <div class="filter-item"><span>Price</span> <i class="fas fa-chevron-down"></i></div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h2>Fragrance</h2>
+                <button class="sort-btn">Sort By <i class="fas fa-bars"></i></button>
+            </div>
+
+            <div class="perfume-grid">
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">PLIX</p>
+                    <p class="p-name">Perfume Bottle Clipart, Luxury Fragrance Images, 10 Watercolor CL.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹749</span>
+                    <div class="actions">
+                        <button class="btn-cart">Add to cart</button>
+                        <i class="fas fa-heart btn-wish"></i>
+                    </div>
+                </div>
+
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">Egde</p>
+                    <p class="p-name">Wild Stone Edge Men Long Lasting Fragrance.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹799</span>
+                    <div class="actions"><button class="btn-cart">Add to cart</button><i class="fas fa-heart btn-wish"></i></div>
+                </div>
+
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">Vanesa</p>
+                    <p class="p-name">Vanesa Desire Perfume Premium & Long Lasting.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹749</span>
+                    <div class="actions"><button class="btn-cart">Add to cart</button><i class="fas fa-heart btn-wish"></i></div>
+                </div>
+
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">Denver</p>
+                    <p class="p-name">Denver Hamilton Perfume for Men.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹799</span>
+                    <div class="actions"><button class="btn-cart">Add to cart</button><i class="fas fa-heart btn-wish"></i></div>
+                </div>
+
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1585232351009-aa87416fca90?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">Combo</p>
+                    <p class="p-name">Beardo Best Seller Perfumes Combo Pack.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹849</span>
+                    <div class="actions"><button class="btn-cart">Add to cart</button><i class="fas fa-heart btn-wish"></i></div>
+                </div>
+
+                <div class="perfume-card">
+                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80">
+                    <p class="brand">Wild Stone</p>
+                    <p class="p-name">Wild Stone Men's Ultra Sensual Perfume.</p>
+                    <div class="rating">★ 4.8 <span>(214 Reviews)</span></div>
+                    <span class="price">Price: ₹799</span>
+                    <div class="actions"><button class="btn-cart">Add to cart</button><i class="fas fa-heart btn-wish"></i></div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button style="padding: 12px 40px; border: 1px solid #ddd; border-radius: 25px; background: #fff; cursor: pointer; font-size: 14px;">View all</button>
+            </div>
+        </main>
+    </div>
+
+    <div style="padding: 0 5%;">
+        <section class="circle-section">
+            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80">
+            <div class="circle-content">
+                <h2>Join our Beauty Circle</h2>
+                <p>Be the first to know about new arrivals, exclusive discounts, and special flash sales.</p>
+                <div class="circle-form">
+                    <input type="email" placeholder="Enter You Email">
+                    <button>Register</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer-wave">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h2 style="font-style: italic; margin-bottom: 10px;">Glowify</h2>
+                <p style="font-size: 13px;">3rd Floor, Valasaravakkam, Chennai - 600080</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul><li>Shop</li><li>New Arrivals</li><li>Offers</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul><li>About</li><li>Contact</li><li>Terms & Conditions</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Social Media</h4>
+                <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 20px;">
+                    <i class="fab fa-facebook"></i><i class="fab fa-instagram"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glowify - Shop Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #ffffff; color: #333; }
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 5%; background: #fff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-left { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .logo { font-size: 22px; font-weight: 700; color: #d63384; font-style: italic; text-decoration: none; }
+        .search-container { position: relative; width: 250px; }
+        .search-container input { width: 100%; padding: 8px 15px 8px 35px; border: none; border-radius: 20px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); outline: none; }
+        .search-container i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        .nav-center { flex: 2; display: flex; justify-content: center; position: relative; }
+        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links a { text-decoration: none; color: #333; font-size: 14px; font-weight: 500; padding: 10px 0; }
+        .nav-links a.active { color: #d63384; border-bottom: 2px solid #d63384; }
+        .shop-container { display: flex; padding: 40px 5%; gap: 30px; }
+        .sidebar { width: 250px; flex-shrink: 0; }
+        .filter-card { background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .main-shop { flex: 1; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        .product-card { background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #f2f2f2; text-align: left; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .product-card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px; }
+        .brand-name { font-size: 12px; font-weight: 600; color: #333; text-transform: uppercase; }
+        .product-name { font-size: 13px; color: #555; height: 35px; overflow: hidden; margin: 5px 0; }
+        .price { font-weight: 700; font-size: 15px; display: block; margin: 10px 0; }
+        .btn-add { background: #ff1e82; color: #fff; border: none; padding: 10px; border-radius: 8px; width: 100%; cursor: pointer; }
+        .footer-wave { background: #ff1e82; color: white; padding: 60px 8% 40px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'home' %}" class="logo">Glowify</a>
+            <div class="search-container">
+                <form action="{% url 'shop' %}" method="GET">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" placeholder="Search product..." value="{{ request.GET.q }}">
+                </form>
+            </div>
+        </div>
+        <div class="nav-center">
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'shop' %}" class="active">Shop</a></li>
+                <li><a href="{% url 'offers' %}">Offers</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="shop-container">
+        <main class="main-shop">
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    <span class="brand-name">{{ product.brand }}</span>
+                    <p class="product-name">{{ product.name }}</p>
+                    <div style="color: #ffc107;">★ {{ product.rating }}</div>
+                    <span class="price">Price: ₹{{ product.price }}</span>
+                   <a href="{% url 'add_to_cart' product.id %}" class="btn-add" style="text-align: center; display: block; text-decoration: none;">Add to cart</a>
+                </div>
+                {% empty %}
+                <p style="text-align: center; grid-column: 1/-1;">Item Not Found</p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer-wave">
+        <h2>Glowify</h2>
+        <p>Your ultimate beauty destination.</p>
+    </footer>
+</body>
+</html>
